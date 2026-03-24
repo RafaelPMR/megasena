@@ -1,0 +1,11 @@
+Pasta server
+npm init -y
+npm install express pg cors dotenv
+npm install -D typescript ts-node @types/express @types/pg @types/cors @types/node
+npx tsc --init
+----------------------------------------------------------------------------------------------
+Pasta front
+npx create-vite@latest front --template react-ts
+npm install
+npm install styled-components
+npm install -D @types/styled-components
