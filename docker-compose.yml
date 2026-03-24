@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: megasena_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./Mega-Sena.csv:/dados.csv
+    ports:
+      - "5432:5432"
+    restart: always
+
+  server:
+    build: ./server
+    container_name: megasena_server
+    env_file: .env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    restart: always
+
+  front:
+    build: ./front
+    container_name: megasena_front
+    ports:
+      - "3010:3010"
+    depends_on:
+      - server
+    restart: always

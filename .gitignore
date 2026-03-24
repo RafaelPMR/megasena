@@ -1,0 +1,19 @@
+# Dependências
+**/node_modules/
+
+# Build gerado pelo TypeScript
+server/dist/
+
+# Vite cache
+front/.vite/
+front/dist/
+
+# Logs
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
