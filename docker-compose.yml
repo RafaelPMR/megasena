@@ -1,34 +1,53 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:16-alpine
     container_name: megasena_postgres
     environment:
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - ./Mega-Sena.csv:/dados.csv
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./Mega-Sena.csv:/dados.csv
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     restart: always
 
-  server:
+  backend:
     build: ./server
-    container_name: megasena_server
+    container_name: megasena_backend
     env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "3001:3001"
-    depends_on:
-      - postgres
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: npm run dev
     restart: always
 
-  front:
+  frontend:
     build: ./front
-    container_name: megasena_front
+    container_name: megasena_frontend
+    depends_on:
+      - backend
     ports:
       - "3010:3010"
-    depends_on:
-      - server
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    command: npm run dev -- --host --port 3010
     restart: always
+
+volumes:
+  postgres_data:

@@ -21,7 +21,7 @@ const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: #769ed3ff;
   }
 `;
 
@@ -54,7 +54,7 @@ const Bola = styled.span`
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: #2563eb;
+  background-color: #000000ff;
   color: white;
   font-weight: bold;
   font-size: 16px;
